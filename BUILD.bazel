@@ -1,0 +1,13 @@
+load(
+    "//tools/lint:defs.bzl",
+    "purescript_lint",
+)
+
+purescript_lint(
+    name = "purescript_lint",
+    srcs = glob(
+        include = [
+            "src/**/*.purs",
+        ],
+    ),
+)
