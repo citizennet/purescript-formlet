@@ -7,7 +7,7 @@ import CitizenNet.Prelude
 import Formlet.Options as Formlet.Options
 import Formlet.Render as Formlet.Render
 import Test.Unit as Test.Unit
-import Test.Utils as Test.Utils
+import Test.Unit.Assert as Test.Unit.Assert
 
 render :: forall options action. Formlet.Render.Render options (foo :: Array) action
 render = Formlet.Render.inj { foo: [] }
@@ -21,6 +21,6 @@ suite =
           forall options action.
           Formlet.Render.Render (foo :: String, bar :: String, baz :: String | options) (foo :: Array) action
         render' = Formlet.Options.set' { foo: "foo", bar: "bar", baz: "baz" } render
-      Test.Utils.equal (Just "foo") (Formlet.Options.get (symbol { foo: _ }) render')
-      Test.Utils.equal (Just "bar") (Formlet.Options.get (symbol { bar: _ }) render')
-      Test.Utils.equal (Just "baz") (Formlet.Options.get (symbol { baz: _ }) render')
+      Test.Unit.Assert.equal (Just "foo") (Formlet.Options.get (symbol { foo: _ }) render')
+      Test.Unit.Assert.equal (Just "bar") (Formlet.Options.get (symbol { bar: _ }) render')
+      Test.Unit.Assert.equal (Just "baz") (Formlet.Options.get (symbol { baz: _ }) render')

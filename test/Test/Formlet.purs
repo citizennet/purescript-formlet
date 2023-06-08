@@ -14,9 +14,9 @@ import Test.Formlet.Render as Test.Formlet.Render
 import Test.Formlet.Validation as Test.Formlet.Validation
 import Test.QuickCheck ((===))
 import Test.Unit as Test.Unit
+import Test.Unit.Assert as Test.Unit.Assert
 import Test.Unit.Main as Test.Unit.Main
 import Test.Unit.QuickCheck as Test.Unit.QuickCheck
-import Test.Utils as Test.Utils
 
 main :: Effect Unit
 main =
@@ -76,12 +76,12 @@ suite =
 
           render :: Variant (foo :: Maybe String, bar :: String) -> String
           render = un Data.Const.Const <<< Formlet.render form unit
-        Test.Utils.equal "foo" (render (variant { foo: Just "foo" }))
-        Test.Utils.equal "" (render (variant { foo: Nothing }))
-        Test.Utils.equal "bar" (render (variant { bar: "bar" }))
-        Test.Utils.equal (Right "foo") (Formlet.validate form unit (variant { foo: Just "foo" }))
-        Test.Utils.equal (Left [ "Required" ]) (Formlet.validate form unit (variant { foo: Nothing }))
-        Test.Utils.equal (Right "bar") (Formlet.validate form unit (variant { bar: "bar" }))
+        Test.Unit.Assert.equal "foo" (render (variant { foo: Just "foo" }))
+        Test.Unit.Assert.equal "" (render (variant { foo: Nothing }))
+        Test.Unit.Assert.equal "bar" (render (variant { bar: "bar" }))
+        Test.Unit.Assert.equal (Right "foo") (Formlet.validate form unit (variant { foo: Just "foo" }))
+        Test.Unit.Assert.equal (Left [ "Required" ]) (Formlet.validate form unit (variant { foo: Nothing }))
+        Test.Unit.Assert.equal (Right "bar") (Formlet.validate form unit (variant { bar: "bar" }))
       Test.Unit.test "`unvalidated` forms are always valid" do
         Test.Unit.QuickCheck.quickCheck \(a :: Maybe String) ->
           Right (Formlet.validate requiredForm unit a) === Formlet.validate (Formlet.unvalidated requiredForm) unit a

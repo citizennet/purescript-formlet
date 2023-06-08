@@ -7,7 +7,7 @@ import CitizenNet.Prelude
 import Formlet.Options as Formlet.Options
 import Formlet.Render as Formlet.Render
 import Test.Unit as Test.Unit
-import Test.Utils as Test.Utils
+import Test.Unit.Assert as Test.Unit.Assert
 
 label :: Proxy "label"
 label = Proxy
@@ -20,7 +20,7 @@ suite =
   Test.Unit.suite "Test.Formlet.Render" do
     Test.Unit.suite "HasOptions instance" do
       Test.Unit.test "You get back what you set" do
-        Test.Utils.equal (Just unit) (Formlet.Options.get label (Formlet.Options.set label unit render))
+        Test.Unit.Assert.equal (Just unit) (Formlet.Options.get label (Formlet.Options.set label unit render))
       Test.Unit.test "get >>> set >>> get is idempotent" do
         let
           render' :: forall options action. Formlet.Render.Render (label :: Unit | options) (foo :: Array) action
@@ -33,4 +33,4 @@ suite =
           -- instead, but `VariantF` does not have an `Eq` instance.
           actual :: Maybe Unit
           actual = Formlet.Options.get label render' >>= flip (Formlet.Options.set label) render' >>> Formlet.Options.get label
-        Test.Utils.equal expected actual
+        Test.Unit.Assert.equal expected actual
