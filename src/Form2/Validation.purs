@@ -1,4 +1,4 @@
-module Form2.Validation
+module Formlet.Validation
   ( Validator(..)
   , invalidate
   , isInt
@@ -31,8 +31,8 @@ import Data.Set.NonEmpty as Data.Set.NonEmpty
 import Data.String as Data.String
 import Data.String.NonEmpty as Data.String.NonEmpty
 import Data.Validation.Semigroup as Data.Validation.Semigroup
-import Form2 as Form2
-import Form2.Options as Form2.Options
+import Formlet as Formlet
+import Formlet.Options as Formlet.Options
 
 -- | A `Validator` is essentially a function from the unvalidated type `a` to
 -- | either an error message or the validated type `b`, plus a decoration that
@@ -96,17 +96,17 @@ instance Category Validator where
 -- | `errors :: Errors` render option.
 invalidate ::
   forall config options render m value result.
-  Form2.Options.HasOptions (errors :: Form2.Errors | options) render =>
+  Formlet.Options.HasOptions (errors :: Formlet.Errors | options) render =>
   Functor m =>
-  Form2.Errors ->
-  Form2.Form config render m value result ->
-  Form2.Form config render m value result
-invalidate errors (Form2.Form f) =
-  Form2.Form \config ->
+  Formlet.Errors ->
+  Formlet.Form config render m value result ->
+  Formlet.Form config render m value result
+invalidate errors (Formlet.Form f) =
+  Formlet.Form \config ->
     let
       { render } = f config
     in
-      { render: Form2.Options.set (symbol { errors: _ }) errors <<< render
+      { render: Formlet.Options.set (symbol { errors: _ }) errors <<< render
       , validate: \_ -> Data.Validation.Semigroup.invalid errors
       }
 
@@ -187,13 +187,13 @@ runValidator = case _ of
 -- | render option.
 validated ::
   forall config options render m value a b.
-  Form2.Options.HasOptions (errors :: Form2.Errors, required :: Boolean | options) render =>
+  Formlet.Options.HasOptions (errors :: Formlet.Errors, required :: Boolean | options) render =>
   Functor m =>
   Validator a b ->
-  Form2.Form config render m value a ->
-  Form2.Form config render m value b
-validated validator (Form2.Form f) =
-  Form2.Form \config ->
+  Formlet.Form config render m value a ->
+  Formlet.Form config render m value b
+validated validator (Formlet.Form f) =
+  Formlet.Form \config ->
     let
       { render, validate } = f config
 
@@ -206,9 +206,9 @@ validated validator (Form2.Form f) =
             NotRequired _ -> do
               -- Applying a `NotRequired` `Validator` should not set the
               -- `required` option to `false`, unless it hasn't yet been set.
-              fromMaybe false (Form2.Options.get (symbol { required: _ }) render)
+              fromMaybe false (Formlet.Options.get (symbol { required: _ }) render)
         in
-          Form2.Options.set (symbol { required: _ }) required' render
+          Formlet.Options.set (symbol { required: _ }) required' render
     in
       { render:
           \value ->
@@ -216,7 +216,7 @@ validated validator (Form2.Form f) =
               -- Here we ignore any validation errors that do not arise from the
               -- specified `validator` because we assume they've already been
               -- rendered in the inner form.
-              mErrors :: Maybe Form2.Errors
+              mErrors :: Maybe Formlet.Errors
               mErrors = case validate value of
                 Data.Validation.Semigroup.V (Left _) -> Nothing
                 Data.Validation.Semigroup.V (Right a) -> case runValidator validator a of
@@ -225,7 +225,7 @@ validated validator (Form2.Form f) =
             in
               setRequired case mErrors of
                 Nothing -> render value
-                Just errors -> Form2.Options.set (symbol { errors: _ }) errors (render value)
+                Just errors -> Formlet.Options.set (symbol { errors: _ }) errors (render value)
       , validate:
           \value ->
             Data.Validation.Semigroup.V do

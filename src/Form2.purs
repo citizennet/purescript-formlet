@@ -1,4 +1,4 @@
-module Form2
+module Formlet
   ( Errors
   , Form(..)
   , Wizard(..)
@@ -115,19 +115,19 @@ instance altForm :: Semigroup (render (m (value -> value))) => Control.Alternati
 -- |
 -- | type Result = Underage { parentName :: String } | Adult { age :: Int }
 -- |
--- | myForm :: Form2.Form _ _ FormData Result
+-- | myForm :: Formlet.Form _ _ FormData Result
 -- | myForm = parallel do
 -- |   age <-
 -- |     sequential
--- |       $ Form2.overRecord { age: _ }
--- |       $ Form2.Validation.validated Form2.Validation.isValidInt
+-- |       $ Formlet.overRecord { age: _ }
+-- |       $ Formlet.Validation.validated Formlet.Validation.isValidInt
 -- |       $ someFormField
 -- |   if age >= 18 then
 -- |     pure $ Adult { age }
 -- |   else
 -- |     sequential
 -- |       $ map (Underage <<< { parentName: _ })
--- |       $ Form2.overRecord { parentName: _ }
+-- |       $ Formlet.overRecord { parentName: _ }
 -- |       $ someFormField
 -- | ```
 -- |
@@ -373,10 +373,10 @@ mapRender' nt (Form f) =
 -- | ```purescript
 -- | type FormData = { firstName :: String, lastName :: String }
 -- |
--- | fullName :: Form2.Form _ _ FormData String
+-- | fullName :: Formlet.Form _ _ FormData String
 -- | fullName = ado
--- |   firstName <- Form2.over (Data.Lens.lens _.firstName _ { firstName = _ }) someFormField
--- |   lastName <- Form2.over (Data.Lens.lens _.lastName _ { lastName = _ }) someFormField
+-- |   firstName <- Formlet.over (Data.Lens.lens _.firstName _ { firstName = _ }) someFormField
+-- |   lastName <- Formlet.over (Data.Lens.lens _.lastName _ { lastName = _ }) someFormField
 -- |   in firstName <> " " <> lastName
 -- | ```
 -- |
@@ -403,15 +403,15 @@ over l (Form f) =
 
 -- | Modify a piece of Form so that its internal state is focused in a single
 -- | field of a record type. Instead of a `Lens'`, like in `over`, this variant
--- | uses a Record with a single field, e.g. `Form2.overRecord { myField: _ }`:
+-- | uses a Record with a single field, e.g. `Formlet.overRecord { myField: _ }`:
 -- |
 -- | ```purescript
 -- | type FormData = { firstName :: String, lastName :: String }
 -- |
--- | fullName :: Form2.Form _ _ FormData String
+-- | fullName :: Formlet.Form _ _ FormData String
 -- | fullName = ado
--- |   firstName <- Form2.overRecord { firstName: _ } someFormField
--- |   lastName <- Form2.overRecord { lastName: _ } someFormField
+-- |   firstName <- Formlet.overRecord { firstName: _ } someFormField
+-- |   lastName <- Formlet.overRecord { lastName: _ } someFormField
 -- |   in firstName <> " " <> lastName
 -- | ```
 overRecord ::
@@ -438,7 +438,7 @@ render ::
 render (Form f) = _.render <<< f
 
 -- | This indexed lens works across all the contents of a container
--- | similarly to `over` and `overRecord` allowing the Form2 sub-clauses
+-- | similarly to `over` and `overRecord` allowing the Formlet sub-clauses
 -- | to be written cleanly in terms of the type within the container
 -- TODO: try and find a way of not using `Data.Lens.Index.Index` here
 -- TODO: try and find a way of using `Traversable` instead of `TraversableWithIndex`
@@ -499,16 +499,16 @@ validate (Form f) = map (un Data.Validation.Semigroup.V) <<< _.validate <<< f
 -- |   = Guest { name :: String }
 -- |   | Admin { email :: String, password :: String }
 -- |
--- | myForm :: Form2.Form _ _ FormData Result
+-- | myForm :: Formlet.Form _ _ FormData Result
 -- | myForm =
 -- |   variant
 -- |     { guestFormData: ado
--- |         firstName <- Form2.overRecord { firstName: _ } someFormField
--- |         lastName <- Form2.overRecord { lastName: _ } someFormField
+-- |         firstName <- Formlet.overRecord { firstName: _ } someFormField
+-- |         lastName <- Formlet.overRecord { lastName: _ } someFormField
 -- |         in Guest { name: firstName <> " " <> lastName }
 -- |     , adminFormData: ado
--- |         email <- Form2.overRecord { email: _ } someFormField
--- |         password <- Form2.overRecord { password: _ } someFormField
+-- |         email <- Formlet.overRecord { email: _ } someFormField
+-- |         password <- Formlet.overRecord { password: _ } someFormField
 -- |         in Admin { email, password }
 -- |     }
 -- | ```

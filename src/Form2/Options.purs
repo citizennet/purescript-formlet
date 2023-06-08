@@ -1,4 +1,4 @@
-module Form2.Options
+module Formlet.Options
   ( class HasOptions
   , class SetOptions
   , get
@@ -19,7 +19,7 @@ import Record as Record
 -- | attributes that grow when new pieces of information are added to a Form.
 -- |
 -- | One example is that, before validation, a Form's render does not have the
--- | `errors :: Maybe (Array String)` option (see `Form2.Validation` for more
+-- | `errors :: Maybe (Array String)` option (see `Formlet.Validation` for more
 -- | information on this concrete case).
 class
   Functor render <=

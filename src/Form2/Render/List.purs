@@ -1,4 +1,4 @@
-module Form2.Render.List
+module Formlet.Render.List
   ( Key
   , List(..)
   , hoist
@@ -10,7 +10,7 @@ module Form2.Render.List
 
 import CitizenNet.Prelude
 
-import Form2 as Form2
+import Formlet as Formlet
 
 type Key =
   String
@@ -69,9 +69,9 @@ mapKey f = List <<< map (\r -> r { key = f r.key }) <<< un List
 singleton ::
   forall config render m value result.
   Key ->
-  Form2.Form config render m value result ->
-  Form2.Form config (List render) m value result
-singleton key = Form2.mapRender (List <<< pure <<< { key, render: _ })
+  Formlet.Form config render m value result ->
+  Formlet.Form config (List render) m value result
+singleton key = Formlet.mapRender (List <<< pure <<< { key, render: _ })
 
 -- | Convert a `List` render functor into an `Array`, discarding any `Key`
 -- | information.

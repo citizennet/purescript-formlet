@@ -1,4 +1,4 @@
-module Form2.Render
+module Formlet.Render
   ( Render(..)
   , inj
   , match
@@ -7,7 +7,7 @@ module Form2.Render
 import CitizenNet.Prelude
 
 import Data.Functor.Variant as Data.Functor.Variant
-import Form2.Options as Form2.Options
+import Formlet.Options as Formlet.Options
 import Option as Option
 import Prim.Row as Prim.Row
 import Prim.RowList as Prim.RowList
@@ -35,7 +35,7 @@ newtype Render options (renders :: Row (Type -> Type)) (action :: Type) = Render
 derive instance newtypeRender :: Newtype (Render options render action) _
 derive instance functorRender :: Functor (Render options renders)
 
-instance hasOptionsRender :: Form2.Options.HasOptions options (Render options renders) where
+instance hasOptionsRender :: Formlet.Options.HasOptions options (Render options renders) where
   get label (Render r) = Option.get label r.options
   set label value (Render r) = Render r { options = Option.set label value r.options }
 

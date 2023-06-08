@@ -1,4 +1,4 @@
-module Form2.Initial
+module Formlet.Initial
   ( class Initial
   , class InitialRecord
   , initial
