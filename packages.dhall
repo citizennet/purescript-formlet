@@ -153,7 +153,7 @@ let additions =
               , "variant"
               ]
           , repo = "https://github.com/citizennet/purescript-prelude.git"
-          , version = "0ab411ff1d8dc58d55085eb92c244a9ca7e0f63c"
+          , version = "e44293a5d05b878cfb822f4a6511f2ba3c1fabac"
           }
       }
 
