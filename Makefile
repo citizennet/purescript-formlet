@@ -7,7 +7,7 @@
 #
 # We also want some place to store all the excess build artifacts.
 # This might be test outputs, or it could be some intermediate artifacts.
-# For this, we use the `$(PRE_BUILD_DIR)` directory.
+# For this, we use the `$(FORMLET_BUILD_DIR)` directory.
 # Assuming the different tools allow us to put their artifacts in here,
 # we can clean up builds really easily: delete this directory.
 #
